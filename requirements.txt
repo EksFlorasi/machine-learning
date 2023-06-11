@@ -2,3 +2,5 @@ matplotlib>=3.7.0
 tensorflow==2.12.*
 kaggle
 split-folders
+keras
+numpy

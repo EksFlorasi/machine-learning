@@ -7,6 +7,12 @@ datasets/raw
 datasets/fauna
 datasets/flora
 
+# Fauna .h5 models
+models/fauna/h5
+
+# Local
+deployment/local
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
