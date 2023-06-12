@@ -8,7 +8,8 @@ datasets/fauna
 datasets/flora
 
 # Fauna .h5 models
-models/fauna/h5
+models/fauna/h5/*.h5
+models/fauna/pb/*/
 
 # Local
 deployment/local
