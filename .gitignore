@@ -7,9 +7,11 @@ datasets/raw
 datasets/fauna
 datasets/flora
 
-# Fauna .h5 models
+# Models
 models/fauna/h5/*.h5
 models/fauna/pb/*/
+models/fauna/json/*/
+models/flora/json/*/
 
 # Local
 deployment/local

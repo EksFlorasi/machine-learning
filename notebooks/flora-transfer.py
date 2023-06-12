@@ -135,4 +135,4 @@ plt.plot  ( epochs, val_loss, label='Validation')
 plt.legend()
 plt.title ('Training and validation loss')
 
-model.save("inception-model-fruitsflowersvege.h5")
+model.save("flora-fruits_flowers_vegetables.h5")
