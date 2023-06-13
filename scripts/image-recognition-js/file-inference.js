@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs-node";
 import * as fs from 'fs';
 
 const faunaModel = await tf.loadLayersModel("file://fauna_model/model.json");
-const FAUNA_LABELS = fs.readFileSync("assets/fauna_labels.txt", "utf-8").split("\n");
+const FAUNA_LABELS = fs.readFileSync("assets/fauna_labels.txt", "utf-8").split("\r\n");
 
 const readImage = path => {
   const imageBuffer = fs.readFileSync(path);
