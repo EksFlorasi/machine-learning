@@ -12,6 +12,8 @@ models/fauna/h5/*.h5
 models/fauna/pb/*/
 models/fauna/json/*/
 models/flora/json/*/
+models/flora/pb/*.zip
+models/flora/h5/*360*.h5
 scripts/image-recognition-js/*model/
 
 # Local
