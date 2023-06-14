@@ -7,17 +7,19 @@ datasets/raw
 datasets/fauna
 datasets/flora
 
-# Models
+# Models - Fauna
 models/fauna/h5/*.h5
 models/fauna/pb/*/
 models/fauna/json/*/
+# Models - Flora
 models/flora/json/*/
 models/flora/pb/*.zip
-models/flora/h5/*360*.h5
-scripts/image-recognition-js/*model/
+models/flora/h5/*large.h5
+# Models - Weight
+models/*.h5
 
-# Local
-deployment/local
+# Models - Deployment
+deployment/image-recognition-js/*model/
 
 
 ### Node ###
