@@ -12,7 +12,7 @@ models/fauna/h5/*.h5
 models/fauna/pb/*/
 models/fauna/json/*/
 # Models - Flora
-models/flora/json/*/
+models/flora/json/*
 models/flora/pb/*.zip
 models/flora/h5/*large.h5
 # Models - Weight

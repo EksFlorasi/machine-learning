@@ -1,18 +1,27 @@
 // TensorFlow
-import * as tf from "@tensorflow/tfjs-node";
-import * as fs from 'fs';
+const tf = require("@tensorflow/tfjs-node")
+const fs = require("fs");
+const axios = require("axios")
 
-// Performance Monitoring
-import { performance } from "perf_hooks";
+// Read image from url
+const readImage = async url => {
+  const response = await axios.get(url,  { responseType: 'arraybuffer' })
+  const buffer = Buffer.from(response.data, "utf-8")
+  return buffer
+}
 
-// Read image from file system
-const readImage = path => {
-  const imageBuffer = fs.readFileSync(path);
-  return tf.node.decodeImage(imageBuffer);
+// Crop image (to use with multiple file formats)
+const cropImage = img => {
+  const size = Math.min(img.shape[0], img.shape[1]);
+  const centerHeight = img.shape[0] / 2;
+  const beginHeight = centerHeight - (size / 2);
+  const centerWidth = img.shape[1] / 2;
+  const beginWidth = centerWidth - (size / 2);
+  return img.slice([beginHeight, beginWidth, 0], [size, size, 3]);
 }
 
 
-// Classify Images
+// Image classifier function
 const imageClassification = async (path, isFlora) => {
   // Model and label paths (bucket address/path)
   let modelPath = "";
@@ -21,8 +30,8 @@ const imageClassification = async (path, isFlora) => {
 
   // Branching to select paths and image size
   if (isFlora) {
-      modelPath = "file://deployment/image-recognition-js/flora_model/flower5_90/model.json"
-      labelPath = "./deployment/image-recognition-js/assets/flower5_labels.txt"
+      modelPath = "file://deployment/image-recognition-js/flora_model/flower16_91/model.json"
+      labelPath = "./deployment/image-recognition-js/assets/flora_labels.txt"
       imageSize = [225, 225]
   } else  {
       modelPath = "file://deployment/image-recognition-js/fauna_model/model.json";
@@ -35,12 +44,16 @@ const imageClassification = async (path, isFlora) => {
   const chosenLabel = fs.readFileSync(labelPath, "utf-8").split("\r\n");
 
   // Get image from file system
-  let image = readImage(path)
+  let imgBuf = await readImage(path)
+  imgBuf = tf.node.decodeImage(imgBuf);
+
   // Preprocess the image to fit the model
+  let image = cropImage(imgBuf)
       .resizeNearestNeighbor(imageSize)
+      .expandDims(0)
       .toFloat()
-      .div(tf.scalar(255.0))
-      .expandDims();
+      .div(tf.scalar(127))
+      .sub(tf.scalar(1));
 
   // Predict the image
   const predictions = await chosenModel.predict(image).data();
@@ -56,26 +69,7 @@ const imageClassification = async (path, isFlora) => {
         return b.probability - a.probability;
       }).slice(0,5);
 
-  // console.log('Classification Results:', predictions);
-  // console.log('Top 5 Labels: ', top5)
   return top5;
 }
 
-
-// let startTime1 = performance.now()
-// const result1 = await imageClassification("./deployment/image-recognition-js/assets/dandelion-2.jpg", true);
-// console.log('Result: ', result1)
-// let endTime1 = performance.now()
-// console.log(`Flower 90 ${endTime1 - startTime1} milliseconds`)
-
-// let startTime2 = performance.now()
-// const result2 = await imageClassification("./deployment/image-recognition-js/assets/dandelion-2.jpg", false);
-// console.log('Result: ', result2)
-// let endTime2 = performance.now()
-// console.log(`Flower 86 ${endTime2 - startTime2} milliseconds`)
-
-const resultFlora = await imageClassification("./deployment/image-recognition-js/assets/flora_image.jpg", true);
-console.log('Result: ', resultFlora)
-
-const resultFauna = await imageClassification("./deployment/image-recognition-js/assets/fauna_image.jpg", false);
-console.log('Result: ', resultFauna)
+module.exports = {imageClassification};
