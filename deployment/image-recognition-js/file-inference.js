@@ -2,6 +2,8 @@
 import * as tf from "@tensorflow/tfjs-node";
 import * as fs from 'fs';
 
+// Performance Monitoring
+import { performance } from "perf_hooks";
 
 // Read image from file system
 const readImage = path => {
@@ -19,9 +21,9 @@ const imageClassification = async (path, isFlora) => {
 
   // Branching to select paths and image size
   if (isFlora) {
-      modelPath = "{PATH TO FLORA MODEL}"
-      labelPath = "{PATH TO FLORA LABEL}"
-      imageSize = [150, 150]
+      modelPath = "file://deployment/image-recognition-js/flora_model/flower5_90/model.json"
+      labelPath = "./deployment/image-recognition-js/assets/flower5_labels.txt"
+      imageSize = [225, 225]
   } else  {
       modelPath = "file://deployment/image-recognition-js/fauna_model/model.json";
       labelPath = "./deployment/image-recognition-js/assets/fauna_labels.txt"
@@ -60,5 +62,20 @@ const imageClassification = async (path, isFlora) => {
 }
 
 
-const result = await imageClassification("./deployment/image-recognition-js/assets/sample_image.jpg", false);
-console.log('Result: ', result)
+// let startTime1 = performance.now()
+// const result1 = await imageClassification("./deployment/image-recognition-js/assets/dandelion-2.jpg", true);
+// console.log('Result: ', result1)
+// let endTime1 = performance.now()
+// console.log(`Flower 90 ${endTime1 - startTime1} milliseconds`)
+
+// let startTime2 = performance.now()
+// const result2 = await imageClassification("./deployment/image-recognition-js/assets/dandelion-2.jpg", false);
+// console.log('Result: ', result2)
+// let endTime2 = performance.now()
+// console.log(`Flower 86 ${endTime2 - startTime2} milliseconds`)
+
+const resultFlora = await imageClassification("./deployment/image-recognition-js/assets/flora_image.jpg", true);
+console.log('Result: ', resultFlora)
+
+const resultFauna = await imageClassification("./deployment/image-recognition-js/assets/fauna_image.jpg", false);
+console.log('Result: ', resultFauna)
